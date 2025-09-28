@@ -12,11 +12,11 @@ import org.firstinspires.ftc.teamcode.commands.TeleopFlywheelCommand;
 import org.firstinspires.ftc.teamcode.subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.FlywheelSubsystem;
 
-@TeleOp(name = "Main Teleop With Flywheel")
+@TeleOp(name = "Main Teleop Program")
 public class MainTeleop extends CommandOpMode {
 
     private DrivetrainSubsystem drivetrain;
-    private FlywheelSubsystem flywheel;
+//    private FlywheelSubsystem flywheel;
     private GamepadEx driverController;
 
     @Override
@@ -27,23 +27,23 @@ public class MainTeleop extends CommandOpMode {
         drivetrain.setTelemetry(telemetry); // Add telemetry for debugging
         driverController = new GamepadEx(gamepad1);
 
-        flywheel = new FlywheelSubsystem(hardwareMap);
-        flywheel.setTelemetry(telemetry);
+//        flywheel = new FlywheelSubsystem(hardwareMap);
+//        flywheel.setTelemetry(telemetry);
 
         drivetrain.setDefaultCommand(
                 new TeleopDriveCommand(
                         drivetrain,
-                        () -> driverController.getLeftY(),
-                        () -> driverController.getLeftX(),
+                        () -> -driverController.getLeftY(),
+                        () -> -driverController.getLeftX(),
                         () -> driverController.getRightX()
                 )
         );
 
-        flywheel.setDefaultCommand(
-                new TeleopFlywheelCommand(
-                        flywheel,
-                        () -> driverController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)
-                )
-        );
+//        flywheel.setDefaultCommand(
+//                new TeleopFlywheelCommand(
+//                        flywheel,
+//                        () -> driverController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)
+//                )
+//        );
     }
 }
