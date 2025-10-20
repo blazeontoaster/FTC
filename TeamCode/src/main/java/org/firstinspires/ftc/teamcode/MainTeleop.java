@@ -9,14 +9,20 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.commands.TeleopDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.TeleopFlywheelCommand;
+import org.firstinspires.ftc.teamcode.commands.TeleopIntakeCommand;
+import org.firstinspires.ftc.teamcode.commands.TeleopTransferCommand;
 import org.firstinspires.ftc.teamcode.subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.FlywheelSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.TransferSubsystem;
 
 @TeleOp(name = "Main Teleop Program")
 public class MainTeleop extends CommandOpMode {
 
     private DrivetrainSubsystem drivetrain;
-//    private FlywheelSubsystem flywheel;
+    private FlywheelSubsystem flywheel;
+//    private TransferSubsystem transfer;
+    private IntakeSubsystem intake;
     private GamepadEx driverController;
 
     @Override
@@ -27,8 +33,14 @@ public class MainTeleop extends CommandOpMode {
         drivetrain.setTelemetry(telemetry); // Add telemetry for debugging
         driverController = new GamepadEx(gamepad1);
 
-//        flywheel = new FlywheelSubsystem(hardwareMap);
-//        flywheel.setTelemetry(telemetry);
+        flywheel = new FlywheelSubsystem(hardwareMap);
+        flywheel.setTelemetry(telemetry);
+
+//        transfer = new TransferSubsystem(hardwareMap);
+//        transfer.setTelemetry(telemetry);
+
+        intake = new IntakeSubsystem(hardwareMap);
+        intake.setTelemetry(telemetry);
 
         drivetrain.setDefaultCommand(
                 new TeleopDriveCommand(
@@ -39,11 +51,25 @@ public class MainTeleop extends CommandOpMode {
                 )
         );
 
-//        flywheel.setDefaultCommand(
-//                new TeleopFlywheelCommand(
-//                        flywheel,
-//                        () -> driverController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)
+        flywheel.setDefaultCommand(
+                new TeleopFlywheelCommand(
+                        flywheel,
+                        () -> driverController.getButton(GamepadKeys.Button.Y)
+                )
+        );
+
+//        transfer.setDefaultCommand(
+//                new TeleopTransferCommand(
+//                        transfer,
+//                        () -> driverController.getButton(GamepadKeys.Button.X)
 //                )
 //        );
+
+        intake.setDefaultCommand(
+                new TeleopIntakeCommand(
+                        intake,
+                        () -> driverController.getButton(GamepadKeys.Button.A)
+                )
+        );
     }
 }

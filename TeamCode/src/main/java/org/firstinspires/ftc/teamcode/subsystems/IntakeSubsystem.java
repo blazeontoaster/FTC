@@ -5,12 +5,12 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class FlywheelSubsystem extends SubsystemBase {
-    private final Motor flywheel;
+public class IntakeSubsystem extends SubsystemBase {
+    private final Motor intake;
     private Telemetry telemetry;
 
-    public FlywheelSubsystem(HardwareMap hardwareMap) {
-        flywheel = new Motor(hardwareMap, "outtakeMotor");
+    public IntakeSubsystem(HardwareMap hardwareMap) {
+        intake = new Motor(hardwareMap, "intakeMotor");
     }
 
     public void setTelemetry(Telemetry telemetry) {
@@ -18,16 +18,16 @@ public class FlywheelSubsystem extends SubsystemBase {
     }
 
     public void setPower(double power) {
-        flywheel.set(power);
+        intake.set(power);
         if (telemetry != null) {
-            telemetry.addData("Flywheel Power", "%.2f", power);
+            telemetry.addData("Intake Power", "%.2f", power);
         }
     }
 
     @Override
     public void periodic() {
         if (telemetry != null) {
-            telemetry.addData("Flywheel Velocity (ticks/s)", flywheel.getCorrectedVelocity());
+            telemetry.addData("Intake Velocity (ticks/s)", intake.getCorrectedVelocity());
             telemetry.update();
         }
     }
