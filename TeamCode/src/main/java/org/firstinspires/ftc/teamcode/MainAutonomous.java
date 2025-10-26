@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,13 +26,29 @@ public class MainAutonomous extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Pose2d startPose = new Pose2d(0, 0, 0);
-        MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
+        MecanumDrive drive;
+        try {
+            drive = new MecanumDrive(hardwareMap, startPose);
+            telemetry.addLine("✅ MecanumDrive initialized successfully");
+        } catch (Exception e) {
+            telemetry.addLine("❌ MecanumDrive initialization failed: " + e.getMessage());
+            telemetry.addLine("Check: Motor names, encoder connections, wheel dimensions");
+            return; // Exit if drive system fails
+        }
 
         aprilTag = new AprilTagProcessor.Builder().build();
-        visionPortal = new VisionPortal.Builder()
-                .setCamera(hardwareMap)
-                .addProcessor(aprilTag)
-                .build();
+        
+        // Configure for Arducam (USB webcam)
+        try {
+            visionPortal = new VisionPortal.Builder()
+                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                    .addProcessor(aprilTag)
+                    .build();
+            telemetry.addLine("✅ Camera initialized successfully");
+        } catch (Exception e) {
+            telemetry.addLine("❌ Camera initialization failed: " + e.getMessage());
+            telemetry.addLine("Check: USB connection, hardware map configuration");
+        }
 
         // Try to open a log file
         try {
@@ -45,6 +62,9 @@ public class MainAutonomous extends LinearOpMode {
         }
 
         telemetry.addLine("Camera initialized. Tracking AprilTags...");
+        telemetry.addLine("Robot Status: Ready");
+        telemetry.addData("Drive System", "MecanumDrive initialized");
+        telemetry.addData("Camera", "Arducam configured as Webcam 1");
         telemetry.update();
 
         waitForStart();
@@ -109,7 +129,9 @@ public class MainAutonomous extends LinearOpMode {
                 // Move if off target
                 if (distance > 2.0) {
                     Action adjustCourse = drive.actionBuilder(currentPose)
-                            .lineToLinearHeading(new Pose2d(avgX, avgY, avgYaw))
+                            .lineToX(avgX)
+                            .lineToY(avgY)
+                            .turnTo(avgYaw)
                             .build();
                     Actions.runBlocking(adjustCourse);
                 }
