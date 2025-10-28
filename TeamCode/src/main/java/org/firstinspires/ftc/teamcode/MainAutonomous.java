@@ -41,7 +41,7 @@ public class MainAutonomous extends LinearOpMode {
         // Configure for Arducam (USB webcam)
         try {
             visionPortal = new VisionPortal.Builder()
-                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                    .setCamera(hardwareMap.get(WebcamName.class, "webcam"))
                     .addProcessor(aprilTag)
                     .build();
             telemetry.addLine("✅ Camera initialized successfully");

@@ -53,6 +53,8 @@ import java.util.List;
 
 @Config
 public final class MecanumDrive {
+    public Pose2d pose;
+
     public static class Params {
         // IMU orientation
         // TODO: fill in these values based on
@@ -248,7 +250,7 @@ public final class MecanumDrive {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        localizer = new PinpointLocalizer(hardwareMap, PARAMS.inPerTick, pose);
+        localizer = new DriveLocalizer(pose);
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }
